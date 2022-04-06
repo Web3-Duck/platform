@@ -6,8 +6,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 import Header from '@/components/Header';
 
 import Footer from '@/components/Footer';
@@ -38,8 +36,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #333;
   height: 100vh;
-  // background: url('./assets/img/bg.png');
-  // background-size: 100% 100%;
-  // background-color: rgb(23, 30, 46);
+  background: url('./assets/img/bg.png');
+  background-size: 100% 100%;
+  overflow-y: auto;
 }
 </style>

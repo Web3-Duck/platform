@@ -1,6 +1,9 @@
 <template>
   <div class="header">
-    <div class="elcol1">
+    <div class="navWrap">
+      <div class="nav" @click="$router.push('/')">交易市场</div>
+      <div class="nav" @click="$router.push('/advertisement')">广告大厅</div>
+
       <!-- <img src="@/assets/img/logo.png" alt="" class="logo" /> -->
     </div>
     <div class="rightItem">
@@ -48,7 +51,15 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-
+  .navWrap {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+  }
+  .nav {
+    margin-right: 20px;
+    cursor: pointer;
+  }
   .rightItem {
     display: flex;
     align-items: center;

@@ -14,16 +14,21 @@
 
     <div class="list">
       <div class="topInfo" v-for="(item, index) in getMarketList" :key="index">
-        <img :src="item.imgUrl" alt="" class="orderImg" />
-        <div>卖家: {{ item.seller }}</div>
-        <div>订单id: {{ item.id }}</div>
-        <div>商品价格: {{ formatAmount(item.amount) }} ETH</div>
-        <div>商品描述: {{ item.describe }}</div>
-        <div v-if="item.status == 2">商品评价: {{ item.evaluate }}</div>
+        <div>
+          <img :src="item.imgUrl" alt="" class="orderImg" />
+          <div>卖家: {{ item.seller }}</div>
+          <div>订单id: {{ item.id }}</div>
+          <div>商品价格: {{ formatAmount(item.amount) }} ETH</div>
+          <div>商品描述: {{ item.describe }}</div>
+          <div>订单状态: {{ item.status == 0 ? '已关闭' : item.status == 1 ? '上架中' : '已完成' }}</div>
+          <div v-if="item.status == 2">商品评价: {{ item.evaluate }}</div>
+        </div>
 
-        <el-button type="primary" @click="handleBuy(item)" v-if="item.status == 1">立即购买</el-button>
-        <el-button type="danger" @click="handleCloseOrder(item)" v-if="item.status == 1 && (item.seller == account || operator)">关闭订单</el-button>
-        <el-button type="primary" @click="handleEvaluateDialog(item)" v-if="item.status == 2 && item.buyer == account && item.evaluate == ''">评价此订单</el-button>
+        <div>
+          <el-button type="primary" @click="handleBuy(item)" v-if="item.status == 1">立即购买</el-button>
+          <el-button type="danger" @click="handleCloseOrder(item)" v-if="item.status == 1 && (item.seller == account || operator)">关闭订单</el-button>
+          <el-button type="primary" @click="handleEvaluateDialog(item)" v-if="item.status == 2 && item.buyer == account && item.evaluate == ''">评价此订单</el-button>
+        </div>
       </div>
     </div>
 
@@ -197,7 +202,6 @@ export default {
       });
     },
     // https://portrait.gitee.com/uploads/avatars/user/20/61279_fuhai_1578915942.png
-    // https://portrait.gitee.com/uploads/avatars/user/399/1199519_Singosgu_1590484030.png
     // https://portrait.gitee.com/uploads/avatars/user/145/435806_jamen_1578923801.png
     async getMarket() {
       const marketContract = getMarketContract();
@@ -316,6 +320,9 @@ export default {
     flex-wrap: wrap;
   }
   .topInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     line-height: 30px;
     width: 350px;
     border: 1px solid #999;

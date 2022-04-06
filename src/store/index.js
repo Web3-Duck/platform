@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import Web3 from 'web3';
 
+const web3 = new Web3();
 //模块化store
 Vue.use(Vuex);
 
@@ -79,7 +80,7 @@ export default new Vuex.Store({
           commit('SETNET', networkIDstring);
         });
         web3Provider.on('accountsChanged', function (accounts) {
-          commit('SETACCOUNTS', accounts[0]);
+          commit('SETACCOUNTS', web3.utils.toChecksumAddress(accounts[0]));
         });
       }
     },
