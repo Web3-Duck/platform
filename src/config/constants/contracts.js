@@ -1,3 +1,3 @@
 export default {
-  market: '0xc7580bA5f1a68688f54c10Aee93E293570499aff',
+  market: '0x4731A328DB3Eb4827575aCa1d69d881944F3d684',
 };

@@ -1,11 +1,18 @@
 <template>
   <div class="header">
-    <div class="elcol1">
-      <!-- <img src="@/assets/img/logo.png" alt="" class="logo" /> -->
+    <div class="" style="flex: 1">
+      <img src="@/assets/img/logo.png" alt="" class="logo" />
     </div>
-    <div class="rightItem">
+
+    <div class="navWrap">
+      <div class="nav" @click="$router.push('/')">Trading market</div>
+      <div class="nav" @click="$router.push('/advertisement')">Advertising Hall</div>
+      <div class="nav" @click="$router.push('/admin')">Admin</div>
+
+    </div>
+    <div class="rightItem" style="flex: 1">
       <div class="addressBox" v-if="account">
-        <div class="account">我的账号地址 {{ account }}</div>
+        <div class="account">My account {{ account }}</div>
       </div>
       <el-button type="primary" class="loginBtn" v-else @click="handleLogin">Connect Wallet</el-button>
     </div>
@@ -48,7 +55,15 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-
+  .navWrap {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+  }
+  .nav {
+    margin-right: 20px;
+    cursor: pointer;
+  }
   .rightItem {
     display: flex;
     align-items: center;
