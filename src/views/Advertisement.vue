@@ -84,12 +84,12 @@ export default {
 
       if (this.menuIndex == 1) {
         return this.marketList.filter(item => {
-          return item.status == 1;
+          return item.status == 1 && (item.publisher == this.account || this.operator);
         });
       }
       if (this.menuIndex == 2) {
         return this.marketList.filter(item => {
-          return item.status == 0;
+          return item.status == 0 && (item.publisher == this.account || this.operator);
         });
       }
       if (this.menuIndex == 3) {
