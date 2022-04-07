@@ -16,7 +16,7 @@
       <div class="topInfo" v-for="(item, index) in getMarketList" :key="index">
         <div>
           <img :src="item.imgUrl" alt="" class="advertisementImg" />
-          <div>发布者地址: {{ item.publisher }}</div>
+          <div>发布者地址: {{ item.publisher }} <span class="userInfo" @click="handleQueryUser(item.publisher)">查看用户信息</span></div>
           <div>广告id: {{ item.id }}</div>
           <div>广告发布时间: {{ new Date(item.time * 1000).toLocaleString() }}</div>
           <div>广告描述: {{ item.describe }}</div>
@@ -46,6 +46,18 @@
         <el-button @click="handleCancel">取 消</el-button>
         <el-button type="primary" @click="handleNewAdvertisement">确 定</el-button>
       </span>
+    </el-dialog>
+    <el-dialog title="查看用户信息" :visible.sync="queryUserVisible" width="500px">
+      <div>地址: {{ queryForm.address }}</div>
+      <div>学号: {{ queryForm.uid }}</div>
+      <div>姓名: {{ queryForm.name }}</div>
+      <div>角色: {{ queryForm.role }}</div>
+      <div>电话: {{ queryForm.telephone }}</div>
+      <div>性别: {{ queryForm.sex }}</div>
+      <div>邮箱: {{ queryForm.email }}</div>
+      <div>偏好交易方式: {{ queryForm.like }}</div>
+      <div>个人简介: {{ queryForm.introduce }}</div>
+      <div>是否白名单: {{ queryForm.whiteList ? '是' : '不是' }}</div>
     </el-dialog>
   </div>
 </template>
@@ -121,6 +133,19 @@ export default {
       menuIndex: 0,
       whiteList: false, //是否为白名单
       operator: false, //是否为操作员
+      queryForm: {
+        address: '',
+        uid: '',
+        whiteList: false,
+        name: '',
+        telephone: '',
+        role: '',
+        sex: '',
+        email: '',
+        like: '',
+        introduce: '',
+      },
+      queryUserVisible: false,
     };
   },
   async created() {
@@ -137,6 +162,12 @@ export default {
     },
   },
   methods: {
+    async handleQueryUser(address) {
+      const marketContract = getMarketContract();
+      const user = await marketContract.methods.users(address).call();
+      this.queryUserVisible = true;
+      this.queryForm = { ...user, address: address };
+    },
     // 上架广告
     async handleAuditAdvertisement(item) {
       const marketContract = getMarketContract(this.provider);
@@ -238,7 +269,7 @@ export default {
   width: 1090px;
   margin: 0 auto;
   color: #333;
-  font-size: 12px;
+  font-size: 13px;
   .logo {
     width: 150px;
   }
@@ -276,9 +307,15 @@ export default {
     justify-content: space-between;
     line-height: 30px;
     width: 350px;
-    border: 1px solid #999;
+    border: 2px solid #999;
+    border-radius: 5px;
     padding: 10px;
     margin: 20px 20px 0 0;
+    color: #fff;
+    .userInfo {
+      cursor: pointer;
+      color: blue;
+    }
     .advertisementImg {
       height: 200px;
       width: 200px;
