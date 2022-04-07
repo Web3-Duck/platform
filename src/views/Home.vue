@@ -259,7 +259,7 @@ export default {
         };
         this.getMarket();
       } catch (e) {
-        this.$message.error(e + '');
+        this.$message.error(e.message || e + '');
       }
     },
     async handleBuy(item) {
@@ -270,7 +270,7 @@ export default {
         this.$message.success('购买成功');
         this.getMarket();
       } catch (e) {
-        this.$message.error(e + '');
+        this.$message.error(e.message || e + '');
       }
     },
     handleEvaluateDialog(item) {
@@ -292,7 +292,7 @@ export default {
         this.evaluateOrderVisible = false;
         this.getMarket();
       } catch (e) {
-        this.$message.error(e + '');
+        this.$message.error(e.message || e + '');
       }
     },
     async handleCloseOrder(item) {
@@ -303,7 +303,7 @@ export default {
         this.$message.success('关闭成功');
         this.getMarket();
       } catch (e) {
-        this.$message.error(e + '');
+        this.$message.error(e.message || e + '');
       }
     },
 

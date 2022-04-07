@@ -182,7 +182,7 @@ export default {
         this.getOwner();
       } catch (e) {
         console.log(e, 'e');
-        this.$message.error(e + '');
+        this.$message.error(e.message || e + '');
       }
     },
     // 设置操作员
@@ -196,7 +196,7 @@ export default {
         this.getWhiteList();
         this.getOwner();
       } catch (e) {
-        this.$message.error(e + '');
+        this.$message.error(e.message || e + '');
       }
     }, // 设置白名单
     async handleWhiteList(status) {
@@ -209,7 +209,7 @@ export default {
         this.getWhiteList();
         this.getOwner();
       } catch (e) {
-        this.$message.error(e + '');
+        this.$message.error(e.message || e + '');
       }
     },
     async getWhiteList() {

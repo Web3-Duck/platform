@@ -177,7 +177,7 @@ export default {
         this.$message.success('上架成功');
         this.getMarket();
       } catch (e) {
-        this.$message.error(e + '');
+        this.$message.error(e.message || e + '');
       }
     },
     handleCancel() {
@@ -240,7 +240,7 @@ export default {
         };
         this.getMarket();
       } catch (e) {
-        this.$message.error(e + '');
+        this.$message.error(e.message || e + '');
       }
     },
 
@@ -253,7 +253,7 @@ export default {
         this.$message.success('关闭成功');
         this.getMarket();
       } catch (e) {
-        this.$message.error(e + '');
+        this.$message.error(e.message || e + '');
       }
     },
 
