@@ -189,8 +189,8 @@ export default {
     async handleOperator(status) {
       const marketContract = getMarketContract(this.provider);
       try {
-        const gas = await marketContract.methods.setOperator(this.inputAddress, status).estimateGas({ from: this.account });
-        await marketContract.methods.setOperator(this.inputAddress, status).send({ from: this.account, gas: gasProcessing(gas) });
+        const gas = await marketContract.methods.setOperator(this.input2Address, status).estimateGas({ from: this.account });
+        await marketContract.methods.setOperator(this.input2Address, status).send({ from: this.account, gas: gasProcessing(gas) });
         this.$message.success('设置成功');
         this.getOperator();
         this.getWhiteList();
