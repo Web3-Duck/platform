@@ -194,7 +194,8 @@ export default {
       }
 
       const marketContract = getMarketContract();
-      this.whiteList = await marketContract.methods.whiteList(this.account).call();
+      const user = await marketContract.methods.users(this.account).call();
+      this.whiteList = user.whiteList;
     },
     async getOperator() {
       if (!this.account) {
