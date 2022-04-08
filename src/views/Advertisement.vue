@@ -15,11 +15,12 @@
     <div class="list">
       <div class="topInfo" v-for="(item, index) in getMarketList" :key="index">
         <div>
-          <img :src="item.imgUrl" alt="" class="advertisementImg" />
+          <img :src="item.imgUrl" :onerror="defaultImg" alt="" class="advertisementImg" />
+          <div class="userInfo" @click="handleAdDetail(item)">查看订单详情</div>
           <div>发布者地址: {{ item.publisher }} <span class="userInfo" @click="handleQueryUser(item.publisher)">查看用户信息</span></div>
           <div>广告id: {{ item.id }}</div>
           <div>广告发布时间: {{ new Date(item.time * 1000).toLocaleString() }}</div>
-          <div>广告描述: {{ item.describe }}</div>
+          <div class="desibl">广告描述: {{ item.describe }}</div>
           <div>广告状态: {{ item.status == 0 ? '已关闭' : item.status == 1 ? '审核中' : '已上架' }}</div>
         </div>
 
@@ -58,6 +59,14 @@
       <div>偏好交易方式: {{ queryForm.like }}</div>
       <div>个人简介: {{ queryForm.introduce }}</div>
       <div>是否白名单: {{ queryForm.whiteList ? '是' : '不是' }}</div>
+    </el-dialog>
+    <el-dialog title="查看广告详情" :visible.sync="adDetailVisible" width="500px">
+      <img :src="adDetail.imgUrl" :onerror="defaultImg" alt="" class="advertisementImg" />
+      <div>发布者地址: {{ adDetail.publisher }}</div>
+      <div>广告id: {{ adDetail.id }}</div>
+      <div>广告发布时间: {{ new Date(adDetail.time * 1000).toLocaleString() }}</div>
+      <div>广告描述: {{ adDetail.describe }}</div>
+      <div>广告状态: {{ adDetail.status == 0 ? '已关闭' : adDetail.status == 1 ? '审核中' : '已上架' }}</div>
     </el-dialog>
   </div>
 </template>
@@ -146,6 +155,9 @@ export default {
         introduce: '',
       },
       queryUserVisible: false,
+      defaultImg: 'this.src="' + require('../assets/img/error.png') + '"',
+      adDetailVisible: false,
+      adDetail: {},
     };
   },
   async created() {
@@ -162,6 +174,10 @@ export default {
     },
   },
   methods: {
+    handleAdDetail(item) {
+      this.adDetailVisible = true;
+      this.adDetail = item;
+    },
     async handleQueryUser(address) {
       const marketContract = getMarketContract();
       const user = await marketContract.methods.users(address).call();
@@ -313,19 +329,26 @@ export default {
     padding: 10px;
     margin: 20px 20px 0 0;
     color: #fff;
+    .desibl {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2; //控制行数
+      overflow: hidden;
+      text-overflow: ellipsis; /*显示省略号来代表被修剪的文本*/
+    }
     .userInfo {
       cursor: pointer;
       color: blue;
     }
-    .advertisementImg {
-      height: 200px;
-      width: 200px;
-      margin: 0 auto;
-      display: inline-block;
-    }
+
     &:nth-child(3n) {
       margin-right: 0;
     }
+  }
+  .advertisementImg {
+    height: 200px;
+    width: 200px;
+    display: inline-block;
   }
 }
 </style>

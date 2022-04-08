@@ -15,13 +15,14 @@
     <div class="list">
       <div class="topInfo" v-for="(item, index) in getMarketList" :key="index">
         <div>
-          <img :src="item.imgUrl" alt="" class="orderImg" />
+          <img :src="item.imgUrl" :onerror="defaultImg" alt="" class="orderImg" />
+          <div class="userInfo" @click="handleOrderDetail(item)">查看订单详情</div>
           <div>订单卖家: {{ item.seller }} <span class="userInfo" @click="handleQueryUser(item.seller)">查看用户信息</span></div>
           <div>订单id: {{ item.id }}</div>
           <div>商品价格: {{ formatAmount(item.amount) }} ETH</div>
-          <div>商品描述: {{ item.describe }}</div>
+          <div class="desibl">商品描述: {{ item.describe }}</div>
           <div>订单状态: {{ item.status == 0 ? '已关闭' : item.status == 1 ? '上架中' : '已完成' }}</div>
-          <div v-if="item.status == 2">商品评价: {{ item.evaluate }}</div>
+          <div class="desibl" v-if="item.status == 2">商品评价: {{ item.evaluate }}</div>
         </div>
 
         <div>
@@ -80,10 +81,21 @@
       <div>个人简介: {{ queryForm.introduce }}</div>
       <div>是否白名单: {{ queryForm.whiteList ? '是' : '不是' }}</div>
     </el-dialog>
+    <el-dialog title="查看订单详情" :visible.sync="orderDetailVisible" width="500px">
+      <img :src="orderDetail.imgUrl" :onerror="defaultImg" alt="" class="orderImg" />
+
+      <div>订单卖家: {{ orderDetail.seller }}</div>
+      <div>订单id: {{ orderDetail.id }}</div>
+      <div>商品价格: {{ orderDetail.amount }}</div>
+      <div>商品价格: {{ formatAmount(orderDetail.amount) }} ETH</div>
+      <div>商品描述: {{ orderDetail.describe }}</div>
+      <div>订单状态: {{ orderDetail.status == 0 ? '已关闭' : orderDetail.status == 1 ? '上架中' : '已完成' }}</div>
+      <div v-if="orderDetail.status == 2">商品评价: {{ orderDetail.evaluate }}</div>
+    </el-dialog>
   </div>
 </template>
 <script>
-import { getJackPairContract, getErc20Contract, getUnStakeContract, getRewardContract, getMarketContract } from '@/utils/contractHelp';
+import { getMarketContract } from '@/utils/contractHelp';
 import { mapState } from 'vuex';
 import { formatAmount, toFixed, accDiv, accMul, accAdd, accSub, parseAmount, gasProcessing } from '@/utils/format';
 export default {
@@ -177,6 +189,9 @@ export default {
         introduce: '',
       },
       queryUserVisible: false,
+      defaultImg: 'this.src="' + require('../assets/img/error.png') + '"',
+      orderDetail: {},
+      orderDetailVisible: false,
     };
   },
   async created() {
@@ -193,6 +208,10 @@ export default {
     },
   },
   methods: {
+    handleOrderDetail(item) {
+      this.orderDetailVisible = true;
+      this.orderDetail = item;
+    },
     async handleQueryUser(address) {
       const marketContract = getMarketContract();
       const user = await marketContract.methods.users(address).call();
@@ -362,19 +381,27 @@ export default {
     padding: 10px;
     margin: 20px 20px 0 0;
     color: #fff;
+    .desibl {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2; //控制行数
+      overflow: hidden;
+      text-overflow: ellipsis; /*显示省略号来代表被修剪的文本*/
+    }
     .userInfo {
       cursor: pointer;
       color: blue;
     }
-    .orderImg {
-      height: 200px;
-      width: 200px;
-      margin: 0 auto;
-      display: inline-block;
-    }
+
     &:nth-child(3n) {
       margin-right: 0;
     }
+  }
+  .orderImg {
+    height: 200px;
+    width: 200px;
+    margin: 0 auto;
+    display: inline-block;
   }
 }
 </style>
