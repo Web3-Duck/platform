@@ -1,14 +1,16 @@
 <template>
   <div class="header">
-    <div class="navWrap">
-      <div class="nav" @click="$router.push('/')">交易市场</div>
-      <div class="nav" @click="$router.push('/advertisement')">广告大厅</div>
-
-      <!-- <img src="@/assets/img/logo.png" alt="" class="logo" /> -->
+    <div class="" style="flex: 1">
+      <img src="@/assets/img/logo.png" alt="" class="logo" />
     </div>
-    <div class="rightItem">
+
+    <div class="navWrap">
+      <div class="nav" @click="$router.push('/')">Trading market</div>
+      <div class="nav" @click="$router.push('/advertisement')">Advertising Hall</div>
+    </div>
+    <div class="rightItem" style="flex: 1">
       <div class="addressBox" v-if="account">
-        <div class="account">我的账号地址 {{ account }}</div>
+        <div class="account">My account {{ account }}</div>
       </div>
       <el-button type="primary" class="loginBtn" v-else @click="handleLogin">Connect Wallet</el-button>
     </div>

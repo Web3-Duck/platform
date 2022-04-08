@@ -1,10 +1,10 @@
 <template>
   <div class="home">
-    <h1 class="title">广告大厅</h1>
-    <el-button type="primary" @click="createAdvertisementVisible = true">发布广告</el-button>
+    <h1 class="title">Advertising Hall</h1>
+    <el-button type="primary" @click="createAdvertisementVisible = true">Advertise</el-button>
     <div class="inputWrap">
-      <el-input style="width: 200px" v-model="inputAddress" placeholder="搜索地址"></el-input>
-      <el-button type="primary" @click="handleAddressSearch">搜索地址</el-button>
+      <el-input style="width: 200px" v-model="inputAddress" placeholder="Search address"></el-input>
+      <el-button type="primary" @click="handleAddressSearch">Search address</el-button>
     </div>
     <div class="menuWrap">
       <div v-for="(item, index) in menuList" :key="index" class="menuItem" @click="menuIndex = index" :class="index == menuIndex && 'active'">
@@ -16,57 +16,57 @@
       <div class="topInfo" v-for="(item, index) in getMarketList" :key="index">
         <div>
           <img :src="item.imgUrl" :onerror="defaultImg" alt="" class="advertisementImg" />
-          <div class="userInfo" @click="handleAdDetail(item)">查看订单详情</div>
-          <div>发布者地址: {{ item.publisher }} <span class="userInfo" @click="handleQueryUser(item.publisher)">查看用户信息</span></div>
-          <div>广告id: {{ item.id }}</div>
-          <div>广告发布时间: {{ new Date(item.time * 1000).toLocaleString() }}</div>
-          <div class="desibl">广告描述: {{ item.describe }}</div>
-          <div>广告状态: {{ item.status == 0 ? '已关闭' : item.status == 1 ? '审核中' : '已上架' }}</div>
+          <div class="userInfo" @click="handleAdDetail(item)">View order details</div>
+          <div>Publisher address: {{ item.publisher }} <span class="userInfo" @click="handleQueryUser(item.publisher)">View user information</span></div>
+          <div>Advertisement id: {{ item.id }}</div>
+          <div>Publish time: {{ new Date(item.time * 1000).toLocaleString() }}</div>
+          <div class="desibl">Describe: {{ item.describe }}</div>
+          <div>Status: {{ item.status == 0 ? 'Closed' : item.status == 1 ? 'Under review' : 'On the shelf' }}</div>
         </div>
 
         <div>
-          <el-button type="primary" @click="handleAuditAdvertisement(item)" v-if="item.status == 1 && operator">上架此广告</el-button>
-          <el-button type="danger" @click="handleCloseAdvertisement(item)" v-if="(item.status == 1 || item.status == 2) && (item.publisher == account || operator)">关闭广告</el-button>
+          <el-button type="primary" @click="handleAuditAdvertisement(item)" v-if="item.status == 1 && operator">Approved</el-button>
+          <el-button type="danger" @click="handleCloseAdvertisement(item)" v-if="(item.status == 1 || item.status == 2) && (item.publisher == account || operator)">Close advertisement </el-button>
         </div>
       </div>
     </div>
 
-    <el-dialog title="发布广告" :visible.sync="createAdvertisementVisible" width="500px">
+    <el-dialog title="Publish Advertisement" :visible.sync="createAdvertisementVisible" width="500px">
       <el-form :model="form">
-        <el-form-item label="发布者地址">
+        <el-form-item label="Publisher address">
           <el-input v-model="account" disabled></el-input>
         </el-form-item>
-        <el-form-item label="图片地址">
+        <el-form-item label="Image Url">
           <el-input v-model="form.imgUrl"></el-input>
         </el-form-item>
-        <el-form-item label="广告描述">
+        <el-form-item label="Describe">
           <el-input v-model="form.describe"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="handleCancel">取 消</el-button>
-        <el-button type="primary" @click="handleNewAdvertisement">确 定</el-button>
+        <el-button @click="handleCancel">Cancel</el-button>
+        <el-button type="primary" @click="handleNewAdvertisement">Confirm</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="查看用户信息" :visible.sync="queryUserVisible" width="500px">
-      <div>地址: {{ queryForm.address }}</div>
-      <div>学号: {{ queryForm.uid }}</div>
-      <div>姓名: {{ queryForm.name }}</div>
-      <div>角色: {{ queryForm.role }}</div>
-      <div>电话: {{ queryForm.telephone }}</div>
-      <div>性别: {{ queryForm.sex }}</div>
-      <div>邮箱: {{ queryForm.email }}</div>
-      <div>偏好交易方式: {{ queryForm.like }}</div>
-      <div>个人简介: {{ queryForm.introduce }}</div>
-      <div>是否白名单: {{ queryForm.whiteList ? '是' : '不是' }}</div>
+    <el-dialog title="View user information" :visible.sync="queryUserVisible" width="500px">
+      <div>Address: {{ queryForm.address }}</div>
+      <div>User Id: {{ queryForm.uid }}</div>
+      <div>Name: {{ queryForm.name }}</div>
+      <div>Role: {{ queryForm.role }}</div>
+      <div>Telephone: {{ queryForm.telephone }}</div>
+      <div>Sex: {{ queryForm.sex }}</div>
+      <div>Email: {{ queryForm.email }}</div>
+      <div>Preferred trading method: {{ queryForm.like }}</div>
+      <div>Introduce: {{ queryForm.introduce }}</div>
+      <div>Is whiteList: {{ queryForm.whiteList ? 'YES' : 'NO' }}</div>
     </el-dialog>
-    <el-dialog title="查看广告详情" :visible.sync="adDetailVisible" width="500px">
+    <el-dialog title="View advertising details" :visible.sync="adDetailVisible" width="500px">
       <img :src="adDetail.imgUrl" :onerror="defaultImg" alt="" class="advertisementImg" />
-      <div>发布者地址: {{ adDetail.publisher }}</div>
-      <div>广告id: {{ adDetail.id }}</div>
-      <div>广告发布时间: {{ new Date(adDetail.time * 1000).toLocaleString() }}</div>
-      <div>广告描述: {{ adDetail.describe }}</div>
-      <div>广告状态: {{ adDetail.status == 0 ? '已关闭' : adDetail.status == 1 ? '审核中' : '已上架' }}</div>
+      <div>Publisher address: {{ adDetail.publisher }}</div>
+      <div>Advertisement id: {{ adDetail.id }}</div>
+      <div>Publish time: {{ new Date(adDetail.time * 1000).toLocaleString() }}</div>
+      <div>Describe: {{ adDetail.describe }}</div>
+      <div>Status: {{ adDetail.status == 0 ? 'Closed' : adDetail.status == 1 ? 'Under review' : 'On the shelf' }}</div>
     </el-dialog>
   </div>
 </template>
@@ -122,20 +122,20 @@ export default {
       marketList: [],
       menuList: [
         {
-          name: '已上架',
+          name: 'On the shelf',
           key: 0,
         },
         {
-          name: '审核中',
+          name: 'Under review',
           key: 1,
         },
         {
-          name: '已下架广告',
+          name: 'Removed from the shelf',
           key: 2,
         },
 
         {
-          name: '我的广告',
+          name: 'My advertisement',
           key: 3,
         },
       ],
@@ -190,7 +190,7 @@ export default {
       try {
         const gas = await marketContract.methods.auditAdvertisement(item.id, 2).estimateGas({ from: this.account });
         await marketContract.methods.auditAdvertisement(item.id, 2).send({ from: this.account, gas: gasProcessing(gas) });
-        this.$message.success('上架成功');
+        this.$message.success('Operate successfully');
         this.getMarket();
       } catch (e) {
         this.$message.error(e.message || e + '');
@@ -248,7 +248,7 @@ export default {
         const fee = parseAmount('0.1');
         const gas = await marketContract.methods.newAdvertisement(imgUrl, describe).estimateGas({ from: this.account, value: fee });
         await marketContract.methods.newAdvertisement(imgUrl, describe).send({ from: this.account, gas: gasProcessing(gas), value: fee });
-        this.$message.success('发布成功');
+        this.$message.success('Publish successfully');
         this.createAdvertisementVisible = false;
         this.form = {
           amount: '',
@@ -267,7 +267,7 @@ export default {
       try {
         const gas = await marketContract.methods.closeAdvertisement(item.id).estimateGas({ from: this.account });
         await marketContract.methods.closeAdvertisement(item.id).send({ from: this.account, gas: gasProcessing(gas) });
-        this.$message.success('关闭成功');
+        this.$message.success('Close successfully ');
         this.getMarket();
       } catch (e) {
         this.$message.error(e.message || e + '');
