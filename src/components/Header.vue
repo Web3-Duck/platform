@@ -5,14 +5,14 @@
     </div>
 
     <div class="navWrap">
-      <div class="nav" @click="$router.push('/')">Trading market</div>
-      <div class="nav" @click="$router.push('/advertisement')">Advertising Hall</div>
+      <!-- <div class="nav" @click="$router.push('/')">Trading market</div> -->
+      <div class="nav" @click="$router.push('/advertisement')">信息大厅</div>
     </div>
     <div class="rightItem" style="flex: 1">
       <div class="addressBox" v-if="account">
-        <div class="account">My account {{ account }}</div>
+        <div class="account">我的账号{{ account }}</div>
       </div>
-      <el-button type="primary" class="loginBtn" v-else @click="handleLogin">Connect Wallet</el-button>
+      <el-button type="primary" class="loginBtn" v-else @click="handleLogin">连接钱包</el-button>
     </div>
   </div>
 </template>

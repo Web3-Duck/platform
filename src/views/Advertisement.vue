@@ -1,10 +1,10 @@
 <template>
   <div class="home">
-    <h1 class="title">Advertising Hall</h1>
-    <el-button type="primary" @click="createAdvertisementVisible = true">Advertise</el-button>
+    <h1 class="title">信息大厅</h1>
+    <el-button type="primary" @click="createAdvertisementVisible = true">发布信息</el-button>
     <div class="inputWrap">
-      <el-input style="width: 200px" v-model="inputAddress" placeholder="Search address"></el-input>
-      <el-button type="primary" @click="handleAddressSearch">Search address</el-button>
+      <el-input style="width: 200px" v-model="inputAddress" placeholder="搜索地址"></el-input>
+      <el-button type="primary" @click="handleAddressSearch">搜索地址</el-button>
     </div>
     <div class="menuWrap">
       <div v-for="(item, index) in menuList" :key="index" class="menuItem" @click="menuIndex = index" :class="index == menuIndex && 'active'">
@@ -15,58 +15,54 @@
     <div class="list">
       <div class="topInfo" v-for="(item, index) in getMarketList" :key="index">
         <div>
-          <img :src="item.imgUrl" :onerror="defaultImg" alt="" class="advertisementImg" />
+          <img v-if="item.imgUrl" :src="item.imgUrl" :onerror="defaultImg" alt="" class="advertisementImg" />
           <div class="userInfo" @click="handleAdDetail(item)">View order details</div>
-          <div>Publisher address: {{ item.publisher }} <span class="userInfo" @click="handleQueryUser(item.publisher)">View user information</span></div>
-          <div>Advertisement id: {{ item.id }}</div>
-          <div>Publish time: {{ new Date(item.time * 1000).toLocaleString() }}</div>
-          <div class="desibl">Describe: {{ item.describe }}</div>
-          <div>Status: {{ item.status == 0 ? 'Closed' : item.status == 1 ? 'Under review' : 'On the shelf' }}</div>
+          <div>发布地址: {{ item.publisher }} <span class="userInfo" @click="handleQueryUser(item.publisher)">查看发布者信息</span></div>
+          <div>信息id: {{ item.id }}</div>
+          <div>发布时间: {{ new Date(item.time * 1000).toLocaleString() }}</div>
+          <div class="desibl">描述: {{ item.describe }}</div>
+          <div>状态: {{ item.status == 0 ? '已下架' : item.status == 1 ? '审核中' : '上架' }}</div>
         </div>
 
         <div>
-          <el-button type="primary" @click="handleAuditAdvertisement(item)" v-if="item.status == 1 && operator">Approved</el-button>
-          <el-button type="danger" @click="handleCloseAdvertisement(item)" v-if="(item.status == 1 || item.status == 2) && (item.publisher == account || operator)">Close advertisement </el-button>
+          <el-button type="primary" @click="handleAuditAdvertisement(item)" v-if="item.status == 1 && owner">审核通过</el-button>
+          <el-button type="danger" @click="handleCloseAdvertisement(item)" v-if="(item.status == 1 || item.status == 2) && (item.publisher == account || owner)">关闭广告 </el-button>
         </div>
       </div>
     </div>
 
-    <el-dialog title="Publish Advertisement" :visible.sync="createAdvertisementVisible" width="500px">
+    <el-dialog title="发布信息" :visible.sync="createAdvertisementVisible" width="500px">
       <el-form :model="form">
-        <el-form-item label="Publisher address">
+        <el-form-item label="发布者地址">
           <el-input v-model="account" disabled></el-input>
         </el-form-item>
-        <el-form-item label="Image Url">
+        <el-form-item label="图片Url（可选）">
           <el-input v-model="form.imgUrl"></el-input>
         </el-form-item>
-        <el-form-item label="Describe">
+        <el-form-item label="描述（可选）">
           <el-input v-model="form.describe"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="handleCancel">Cancel</el-button>
-        <el-button type="primary" @click="handleNewAdvertisement">Confirm</el-button>
+        <el-button @click="handleCancel">取消</el-button>
+        <el-button type="primary" @click="handleNewAdvertisement">确定</el-button>
       </span>
     </el-dialog>
     <el-dialog title="View user information" :visible.sync="queryUserVisible" width="500px">
-      <div>Address: {{ queryForm.address }}</div>
-      <div>User Id: {{ queryForm.uid }}</div>
-      <div>Name: {{ queryForm.name }}</div>
-      <div>Role: {{ queryForm.role }}</div>
-      <div>Telephone: {{ queryForm.telephone }}</div>
-      <div>Sex: {{ queryForm.sex }}</div>
+      <div>账号地址: {{ queryForm.address }}</div>
+      <div>姓名: {{ queryForm.name }}</div>
+      <div>电话: {{ queryForm.telephone }}</div>
+      <div>性别: {{ queryForm.sex }}</div>
       <div>Email: {{ queryForm.email }}</div>
-      <div>Preferred trading method: {{ queryForm.like }}</div>
-      <div>Introduce: {{ queryForm.introduce }}</div>
-      <div>Is whiteList: {{ queryForm.whiteList ? 'YES' : 'NO' }}</div>
+      <div>简介: {{ queryForm.introduce }}</div>
     </el-dialog>
     <el-dialog title="View advertising details" :visible.sync="adDetailVisible" width="500px">
       <img :src="adDetail.imgUrl" :onerror="defaultImg" alt="" class="advertisementImg" />
-      <div>Publisher address: {{ adDetail.publisher }}</div>
-      <div>Advertisement id: {{ adDetail.id }}</div>
-      <div>Publish time: {{ new Date(adDetail.time * 1000).toLocaleString() }}</div>
-      <div>Describe: {{ adDetail.describe }}</div>
-      <div>Status: {{ adDetail.status == 0 ? 'Closed' : adDetail.status == 1 ? 'Under review' : 'On the shelf' }}</div>
+      <div>发布者地址: {{ adDetail.publisher }}</div>
+      <div>信息id: {{ adDetail.id }}</div>
+      <div>发布时间: {{ new Date(adDetail.time * 1000).toLocaleString() }}</div>
+      <div>描述: {{ adDetail.describe }}</div>
+      <div>状态: {{ adDetail.status == 0 ? '已关闭' : adDetail.status == 1 ? '审核中' : '上架' }}</div>
     </el-dialog>
   </div>
 </template>
@@ -93,12 +89,12 @@ export default {
 
       if (this.menuIndex == 1) {
         return this.marketList.filter(item => {
-          return item.status == 1 && (item.publisher == this.account || this.operator);
+          return item.status == 1 && (item.publisher == this.account || this.owner);
         });
       }
       if (this.menuIndex == 2) {
         return this.marketList.filter(item => {
-          return item.status == 0 && (item.publisher == this.account || this.operator);
+          return item.status == 0 && (item.publisher == this.account || this.owner);
         });
       }
       if (this.menuIndex == 3) {
@@ -122,36 +118,31 @@ export default {
       marketList: [],
       menuList: [
         {
-          name: 'On the shelf',
+          name: '上架',
           key: 0,
         },
         {
-          name: 'Under review',
+          name: '审核中',
           key: 1,
         },
         {
-          name: 'Removed from the shelf',
+          name: '下架',
           key: 2,
         },
 
         {
-          name: 'My advertisement',
+          name: '我的信息',
           key: 3,
         },
       ],
       menuIndex: 0,
-      whiteList: false, //是否为白名单
-      operator: false, //是否为操作员
+      owner: false, //是否为操作员
       queryForm: {
         address: '',
-        uid: '',
-        whiteList: false,
         name: '',
         telephone: '',
-        role: '',
         sex: '',
         email: '',
-        like: '',
         introduce: '',
       },
       queryUserVisible: false,
@@ -161,16 +152,14 @@ export default {
     };
   },
   async created() {
-    this.getOperator();
-    this.getWhiteList();
+    this.getOwner();
     this.getMarket();
   },
   beforeDestroy() {},
   mounted() {},
   watch: {
     account() {
-      this.getOperator();
-      this.getWhiteList();
+      this.getOwner();
     },
   },
   methods: {
@@ -190,7 +179,7 @@ export default {
       try {
         const gas = await marketContract.methods.auditAdvertisement(item.id, 2).estimateGas({ from: this.account });
         await marketContract.methods.auditAdvertisement(item.id, 2).send({ from: this.account, gas: gasProcessing(gas) });
-        this.$message.success('Operate successfully');
+        this.$message.success('操作成功');
         this.getMarket();
       } catch (e) {
         this.$message.error(e.message || e + '');
@@ -204,22 +193,14 @@ export default {
         describe: '',
       };
     },
-    async getWhiteList() {
+
+    async getOwner() {
       if (!this.account) {
         return;
       }
 
       const marketContract = getMarketContract();
-      const user = await marketContract.methods.users(this.account).call();
-      this.whiteList = user.whiteList;
-    },
-    async getOperator() {
-      if (!this.account) {
-        return;
-      }
-
-      const marketContract = getMarketContract();
-      this.operator = await marketContract.methods.operator(this.account).call();
+      this.owner = await marketContract.methods.owner().call();
     },
     async handleAddressSearch() {
       if (this.inputAddress == '') {
@@ -235,28 +216,31 @@ export default {
     async getMarket() {
       const marketContract = getMarketContract();
       const length = await marketContract.methods.advertisementLength().call();
+      console.log(length, 'length');
       const p = [];
       for (let i = 0; i < length; i++) {
         p.push(marketContract.methods.advertisements(i).call());
       }
       this.marketList = await Promise.all(p);
+      console.log(this.marketList);
     },
     async handleNewAdvertisement() {
       const marketContract = getMarketContract(this.provider);
       const { imgUrl, describe } = this.form;
       try {
-        const fee = parseAmount('0.1');
-        const gas = await marketContract.methods.newAdvertisement(imgUrl, describe).estimateGas({ from: this.account, value: fee });
-        await marketContract.methods.newAdvertisement(imgUrl, describe).send({ from: this.account, gas: gasProcessing(gas), value: fee });
-        this.$message.success('Publish successfully');
+        const gas = await marketContract.methods.newAdvertisement(imgUrl, describe).estimateGas({ from: this.account });
+        await marketContract.methods.newAdvertisement(imgUrl, describe).send({ from: this.account, gas: gasProcessing(gas) });
+        this.$message.success('发布成功');
         this.createAdvertisementVisible = false;
         this.form = {
-          amount: '',
           imgUrl: '',
           describe: '',
         };
         this.getMarket();
       } catch (e) {
+        console.log(e.code, 'ee');
+
+        console.log(Object.keys(e));
         this.$message.error(e.message || e + '');
       }
     },
@@ -267,7 +251,7 @@ export default {
       try {
         const gas = await marketContract.methods.closeAdvertisement(item.id).estimateGas({ from: this.account });
         await marketContract.methods.closeAdvertisement(item.id).send({ from: this.account, gas: gasProcessing(gas) });
-        this.$message.success('Close successfully ');
+        this.$message.success('关闭成功');
         this.getMarket();
       } catch (e) {
         this.$message.error(e.message || e + '');
