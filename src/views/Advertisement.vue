@@ -178,9 +178,16 @@ export default {
       const marketContract = getMarketContract(this.provider);
       try {
         const gas = await marketContract.methods.auditAdvertisement(item.id, 2).estimateGas({ from: this.account });
-        await marketContract.methods.auditAdvertisement(item.id, 2).send({ from: this.account, gas: gasProcessing(gas) });
-        this.$message.success('操作成功');
-        this.getMarket();
+        marketContract.methods
+          .auditAdvertisement(item.id, 2)
+          .send({ from: this.account, gas: gasProcessing(gas) })
+          .on('transactionHash', hash => {
+            this.userVisible = false;
+          })
+          .on('receipt', receipt => {
+            this.$message.success('操作成功');
+            this.getMarket();
+          });
       } catch (e) {
         this.$message.error(e.message || e + '');
       }
@@ -228,14 +235,20 @@ export default {
       const { imgUrl, describe } = this.form;
       try {
         const gas = await marketContract.methods.newAdvertisement(imgUrl, describe).estimateGas({ from: this.account });
-        await marketContract.methods.newAdvertisement(imgUrl, describe).send({ from: this.account, gas: gasProcessing(gas) });
-        this.$message.success('发布成功');
-        this.createAdvertisementVisible = false;
-        this.form = {
-          imgUrl: '',
-          describe: '',
-        };
-        this.getMarket();
+        await marketContract.methods
+          .newAdvertisement(imgUrl, describe)
+          .send({ from: this.account, gas: gasProcessing(gas) })
+          .on('transactionHash', hash => {
+            this.createAdvertisementVisible = false;
+            this.form = {
+              imgUrl: '',
+              describe: '',
+            };
+          })
+          .on('receipt', receipt => {
+            this.$message.success('发布成功');
+            this.getMarket();
+          });
       } catch (e) {
         console.log(e.code, 'ee');
 
@@ -249,9 +262,14 @@ export default {
       const marketContract = getMarketContract(this.provider);
       try {
         const gas = await marketContract.methods.closeAdvertisement(item.id).estimateGas({ from: this.account });
-        await marketContract.methods.closeAdvertisement(item.id).send({ from: this.account, gas: gasProcessing(gas) });
-        this.$message.success('关闭成功');
-        this.getMarket();
+        await marketContract.methods
+          .closeAdvertisement(item.id)
+          .send({ from: this.account, gas: gasProcessing(gas) })
+          .on('transactionHash', hash => {})
+          .on('receipt', receipt => {
+            this.$message.success('关闭成功');
+            this.getMarket();
+          });
       } catch (e) {
         this.$message.error(e.message || e + '');
       }

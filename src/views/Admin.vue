@@ -124,10 +124,16 @@ export default {
       try {
         const { address, name, telephone, sex, email, introduce } = this.form;
         const gas = await marketContract.methods.updateUser(address, sex, introduce, name, telephone, email, true).estimateGas({ from: this.account });
-        await marketContract.methods.updateUser(address, sex, introduce, name, telephone, email, true).send({ from: this.account, gas: gasProcessing(gas) });
-        this.$message.success('更新成功');
-        this.userVisible = false;
-        this.getOwner();
+        marketContract.methods
+          .updateUser(address, sex, introduce, name, telephone, email, true)
+          .send({ from: this.account, gas: gasProcessing(gas) })
+          .on('transactionHash', hash => {
+            this.userVisible = false;
+          })
+          .on('receipt', receipt => {
+            this.$message.success('更新成功');
+            this.getOwner();
+          });
       } catch (e) {
         console.log(e, 'e');
         this.$message.error(e.message || e + '');
