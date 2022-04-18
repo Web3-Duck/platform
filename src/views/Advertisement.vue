@@ -2,13 +2,14 @@
   <div class="home">
     <h1 class="title">信息大厅</h1>
     <el-button type="primary" @click="createAdvertisementVisible = true">发布信息</el-button>
+    <el-button type="primary" @click="createAdvertisementVisible = true">个人信息</el-button>
     <div class="inputWrap">
       <el-input style="width: 200px" v-model="inputAddress" placeholder="搜索地址"></el-input>
       <el-button type="primary" @click="handleAddressSearch">搜索地址</el-button>
     </div>
     <div class="menuWrap">
-      <div v-for="(item, index) in menuList" :key="index" class="menuItem" @click="menuIndex = index" :class="index == menuIndex && 'active'">
-        <div>{{ item.name }}</div>
+      <div v-for="(item, index) in menuList" :key="index" @click="menuIndex = index">
+        <div v-if="owner || (index != 1 && index != 2)" class="menuItem" :class="index == menuIndex && 'active'">{{ item.name }}</div>
       </div>
     </div>
 
@@ -16,12 +17,12 @@
       <div class="topInfo" v-for="(item, index) in getMarketList" :key="index">
         <div>
           <img v-if="item.imgUrl" :src="item.imgUrl" :onerror="defaultImg" alt="" class="advertisementImg" />
-          <div class="userInfo" @click="handleAdDetail(item)">View order details</div>
-          <div>发布地址: {{ item.publisher }} <span class="userInfo" @click="handleQueryUser(item.publisher)">查看发布者信息</span></div>
-          <div>信息id: {{ item.id }}</div>
+          <div class="desibl">信息内容: {{ item.describe }}</div>
+          <br />
+          <div><span class="userInfo" @click="handleQueryUser(item.publisher)">查看发布者信息</span></div>
+          <!-- <div class="userInfo" @click="handleAdDetail(item)">View order details</div> -->
+          <div>发布地址: {{ item.publisher }}</div>
           <div>发布时间: {{ new Date(item.time * 1000).toLocaleString() }}</div>
-          <div class="desibl">描述: {{ item.describe }}</div>
-          <div>状态: {{ item.status == 0 ? '已下架' : item.status == 1 ? '审核中' : '上架' }}</div>
         </div>
 
         <div>
@@ -39,7 +40,7 @@
         <el-form-item label="图片Url（可选）">
           <el-input v-model="form.imgUrl"></el-input>
         </el-form-item>
-        <el-form-item label="描述（可选）">
+        <el-form-item label="信息内容（可选）">
           <el-input v-model="form.describe"></el-input>
         </el-form-item>
       </el-form>
@@ -61,7 +62,7 @@
       <div>发布者地址: {{ adDetail.publisher }}</div>
       <div>信息id: {{ adDetail.id }}</div>
       <div>发布时间: {{ new Date(adDetail.time * 1000).toLocaleString() }}</div>
-      <div>描述: {{ adDetail.describe }}</div>
+      <div>信息内容: {{ adDetail.describe }}</div>
       <div>状态: {{ adDetail.status == 0 ? '已关闭' : adDetail.status == 1 ? '审核中' : '上架' }}</div>
     </el-dialog>
   </div>
@@ -160,6 +161,7 @@ export default {
   watch: {
     account() {
       this.getOwner();
+      this.getMarket();
     },
   },
   methods: {
@@ -207,7 +209,12 @@ export default {
       }
 
       const marketContract = getMarketContract();
-      this.owner = await marketContract.methods.owner().call();
+      const owner = await marketContract.methods.owner().call();
+      if (owner == this.account) {
+        this.owner = true;
+      } else {
+        this.owner = false;
+      }
     },
     async handleAddressSearch() {
       if (this.inputAddress == '') {
