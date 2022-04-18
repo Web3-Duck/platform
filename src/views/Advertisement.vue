@@ -1,8 +1,8 @@
 <template>
   <div class="home">
-    <h1 class="title">信息大厅</h1>
+    <div><el-button type="primary" style="margin: 20px 0" @click="handleQueryUser(account)">个人信息</el-button></div>
+
     <el-button type="primary" @click="createAdvertisementVisible = true">发布信息</el-button>
-    <el-button type="primary" @click="handleQueryUser(account)">个人信息</el-button>
     <div class="inputWrap">
       <el-input style="width: 200px" v-model="inputAddress" placeholder="搜索地址"></el-input>
       <el-button type="primary" @click="handleAddressSearch">搜索地址</el-button>
