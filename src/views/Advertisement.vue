@@ -2,7 +2,7 @@
   <div class="home">
     <h1 class="title">信息大厅</h1>
     <el-button type="primary" @click="createAdvertisementVisible = true">发布信息</el-button>
-    <el-button type="primary" @click="createAdvertisementVisible = true">个人信息</el-button>
+    <el-button type="primary" @click="handleQueryUser(account)">个人信息</el-button>
     <div class="inputWrap">
       <el-input style="width: 200px" v-model="inputAddress" placeholder="搜索地址"></el-input>
       <el-button type="primary" @click="handleAddressSearch">搜索地址</el-button>
@@ -49,7 +49,7 @@
         <el-button type="primary" @click="handleNewAdvertisement">确定</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="View user information" :visible.sync="queryUserVisible" width="500px">
+    <el-dialog title="查看用户信息" :visible.sync="queryUserVisible" width="500px">
       <div>账号地址: {{ queryForm.address }}</div>
       <div>姓名: {{ queryForm.name }}</div>
       <div>电话: {{ queryForm.telephone }}</div>
