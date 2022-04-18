@@ -216,7 +216,6 @@ export default {
     async getMarket() {
       const marketContract = getMarketContract();
       const length = await marketContract.methods.advertisementLength().call();
-      console.log(length, 'length');
       const p = [];
       for (let i = 0; i < length; i++) {
         p.push(marketContract.methods.advertisements(i).call());
