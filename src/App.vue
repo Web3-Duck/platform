@@ -1,9 +1,7 @@
 <template>
   <div id="app">
     <Header></Header>
-    <h2>请使用Rinkeby网络体验</h2>
-    <h2>合约已关闭白名单，操作员权，管理员权限限制，自行体验</h2>
-    <h2>合约地址Rinkeby:0x4731A328DB3Eb4827575aCa1d69d881944F3d684</h2>
+   
     <router-view />
   </div>
 </template>
